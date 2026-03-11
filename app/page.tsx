@@ -37,7 +37,6 @@ export default function WorldCup() {
     }
   };
 
-  // 모바일 리셋 오류 해결: 강제 페이지 이동 방식
   const resetGame = () => {
     window.location.href = window.location.pathname;
   };
@@ -163,10 +162,9 @@ export default function WorldCup() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-yellow-600/20 blur-[120px] rounded-full" />
-        {/* Winner -> ¡Ganador! 로 수정 */}
         <h1 className="text-6xl md:text-8xl font-black text-yellow-500 mb-8 z-10 italic uppercase tracking-tighter animate-bounce">¡Ganador!</h1>
-        <div id="winner-card" className="relative w-72 aspect-[2/3.2] rounded-[3rem] border-[8px] border-yellow-500 overflow-hidden z-10 shadow-[0_0_100px_rgba(234,179,8,0.3)]">
-          <img src={finalWinner.img_url} className="w-full h-full object-cover" crossOrigin="anonymous" alt="" />
+        <div id="winner-card" className="relative w-72 aspect-[2/3.2] rounded-[3rem] border-[8px] border-yellow-500 overflow-hidden z-10 shadow-[0_0_100px_rgba(234,179,8,0.3)] bg-zinc-950">
+          <img src={finalWinner.img_url} className="w-full h-full object-contain" crossOrigin="anonymous" alt="" />
           <div className="absolute bottom-0 left-0 right-0 bg-yellow-500 pt-6 pb-10 text-center px-4">
             {nameParts.length > 1 && <p className="text-black/60 text-xs font-black uppercase mb-1 tracking-widest">{nameParts[0]}</p>}
             <p className="text-black text-3xl font-black uppercase tracking-tighter leading-none break-words">
@@ -180,7 +178,6 @@ export default function WorldCup() {
           <button onClick={saveAsImage} className="bg-white text-black py-4 rounded-2xl font-black text-xs uppercase shadow-lg">Guardar Foto</button>
           <button onClick={copyLink} className="bg-zinc-800 text-white py-4 rounded-2xl font-black text-xs uppercase shadow-lg">Copiar Link</button>
         </div>
-        {/* resetGame 함수 연결하여 모바일 오류 해결 */}
         <button onClick={resetGame} className="mt-12 bg-white text-black px-12 py-5 rounded-full font-black text-xl z-10 hover:bg-yellow-500 transition-all shadow-xl uppercase">Volver a jugar</button>
         <RankingChart />
       </div>
@@ -218,9 +215,9 @@ export default function WorldCup() {
           const nameData = person?.eng_name?.split('_') || [person?.kor_name];
           return (
             <div key={idx} onClick={() => selectWinner(person)} className="flex-1 flex flex-col items-center cursor-pointer h-full relative group">
-              <div className="relative w-full h-full overflow-hidden rounded-[2.5rem] md:rounded-[4rem] border-2 border-zinc-800 group-hover:border-red-600 transition-all duration-500 shadow-2xl">
-                <img src={person?.img_url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90" />
+              <div className="relative w-full h-full overflow-hidden rounded-[2.5rem] md:rounded-[4rem] border-2 border-zinc-800 group-hover:border-red-600 transition-all duration-500 shadow-2xl bg-zinc-950">
+                <img src={person?.img_url} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" alt="" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
                 <div className="absolute bottom-8 md:bottom-12 left-0 right-0 text-center px-4 md:px-8 z-20">
                   {nameData.length > 1 && (
                     <p className="text-red-500 text-xs md:text-lg font-black uppercase tracking-[0.2em] mb-1 drop-shadow-lg">
