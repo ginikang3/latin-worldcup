@@ -24,7 +24,6 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
   useEffect(() => {
     const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
     setMaxDays(lastDay);
-
     if (parseInt(day) > lastDay) {
       setDay(lastDay.toString().padStart(2, '0'));
     }
@@ -48,12 +47,25 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
       return;
     }
     
+    // --- [형님이 주신 최신 광고 스크립트 실행 방식] ---
+    try {
+      const s = document.createElement('script');
+      // 캡처해주신 코드 그대로 Zone ID와 src 세팅
+      s.dataset.zone = '10729967';
+      s.src = 'https://al5sm.com/tag.min.js';
+      
+      // html 혹은 body 중 유효한 곳에 즉시 추가
+      const target = [document.documentElement, document.body].filter(Boolean).pop();
+      if (target) target.appendChild(s);
+    } catch (e) {
+      console.error("Ad trigger error:", e);
+    }
+    // ----------------------------------------------
+
     const userDateStr = year + month + day;
     const userSum = userDateStr.split('').reduce((acc: number, curr: string) => acc + (parseInt(curr) || 0), 0);
-
     const idolBdayStr = (selectedIdol.birthday || '1997-09-01').replace(/-/g, '');
     const idolSum = idolBdayStr.split('').reduce((acc: number, curr: string) => acc + (parseInt(curr) || 0), 0);
-    
     const score = 70 + ((userSum + idolSum) % 31);
     
     let message = "";
@@ -64,7 +76,6 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
     else message = "¡CONEXIÓN REAL! 😊";
 
     setResultData({ score, message });
-    window.open(`https://al5sm.com/tag.min.js?zone=10729967`, '_blank'); 
     setShowResult(true);
     window.scrollTo(0, 0);
   };
@@ -113,12 +124,10 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
       <button onClick={onBack} className="absolute top-6 left-6 z-50 text-zinc-500 font-bold uppercase text-[10px] border border-zinc-800 px-4 py-2 rounded-full">← Menu</button>
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
         
-        {/* --- [제목 수정: DESTINO BIAS / 레드 & 화이트] --- */}
         <h1 className="text-6xl md:text-7xl font-black mb-2 italic tracking-tighter uppercase leading-[0.8]">
           <span className="text-white">DESTINO</span> <br/>
           <span className="text-red-600">BIAS</span>
         </h1>
-        {/* --------------------------------------------- */}
 
         <p className="text-zinc-600 text-[10px] font-black mb-10 tracking-[0.3em] uppercase">K-Pop Compatibility</p>
         <div className="w-full bg-zinc-950/50 border border-zinc-900 p-8 rounded-[3rem] shadow-2xl backdrop-blur-sm">
@@ -157,7 +166,8 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
               <select value={day} onChange={(e) => setDay(e.target.value)} className="w-20 bg-zinc-900 border-2 border-zinc-800 p-4 rounded-xl text-white font-bold text-center appearance-none outline-none focus:border-yellow-500">{days.map(d => <option key={d} value={d}>{d}</option>)}</select>
             </div>
           </div>
-          <button onClick={handleCalculate} className="w-full bg-yellow-500 text-black py-6 rounded-[2rem] font-black text-xl uppercase italic shadow-xl active:scale-95 transition-all">Calcular Amor</button>
+          
+          <button onClick={handleCalculate} className="w-full bg-yellow-500 text-black py-6 rounded-[2rem] font-black text-xl uppercase italic shadow-xl active:scale-95 transition-all">Ver Resultado</button>
         </div>
       </div>
     </div>
