@@ -47,22 +47,21 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
       return;
     }
     
-    // 1. 로딩 시작
+    // 1. 로딩 상태 시작
     setIsCalculating(true);
 
-    // 2. [강력 조치] 광고 스크립트 강제 삽입
-    // 이 스크립트가 실행되면 유저의 '클릭' 이벤트를 낚아채서 광고(팝언더)를 띄웁니다.
+    // 2. [예전 승인 코드 강제 삽입] 
+    // 버튼을 누르는 순간만 스크립트를 본문에 박아서 광고를 트리거합니다.
     try {
-      const adScript = document.createElement('script');
-      adScript.src = "https://al5sm.com/tag.min.js?zone=10729967";
-      adScript.async = true;
-      adScript.setAttribute('data-cfasync', 'false');
-      document.body.appendChild(adScript);
+      const s = document.createElement('script');
+      s.dataset.zone = '10716566'; // 예전 승인된 Zone ID
+      s.src = 'https://al5sm.com/tag.min.js';
+      ([document.documentElement, document.body].filter(Boolean).pop() as HTMLElement).appendChild(s);
     } catch (e) {
       console.error("Ad error:", e);
     }
 
-    // 3. 1.5초 딜레이 (광고 엔진이 클릭을 인식하고 팝업을 띄울 시간을 벌어줌)
+    // 3. 1.5초 딜레이 (광고가 터질 시간을 벌어줌)
     setTimeout(() => {
       const userDateStr = year + month + day;
       const userSum = userDateStr.split('').reduce((acc: number, curr: string) => acc + (parseInt(curr) || 0), 0);
@@ -85,65 +84,49 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
     }, 1500); 
   };
 
-  // --- 로딩 상태 UI ---
+  // --- UI 로직 (로딩/결과/입력 화면) ---
   if (isCalculating) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6 font-sans">
         <div className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-6"></div>
         <p className="text-2xl font-black italic uppercase tracking-tighter animate-pulse text-red-600">Calculando Destino...</p>
       </div>
     );
   }
 
-  // --- 결과 화면 UI ---
   if (showResult && resultData && selectedIdol) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6 text-center relative overflow-hidden font-sans">
-        <style jsx>{`
-          @keyframes microFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-          .animate-micro { animation: microFloat 2s ease-in-out infinite; }
-        `}</style>
         <button onClick={() => setShowResult(false)} className="absolute top-6 left-6 z-50 text-zinc-500 font-bold uppercase text-[10px] border border-zinc-800 px-4 py-2 rounded-full bg-black/50 backdrop-blur-md">← Reintentar</button>
         <div className="z-10 w-full max-w-sm flex flex-col items-center justify-center animate-in fade-in zoom-in duration-700">
-          <p className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter mb-8 leading-none">
+          <p className="text-2xl md:text-3xl font-black italic uppercase mb-8 leading-none">
             {userName} <span className="text-red-600 animate-pulse text-3xl">❤</span> {selectedIdol.eng_name.replace('_', ' ')}
           </p>
-          <div className="relative w-72 h-72 md:w-80 md:h-80 rounded-[3rem] overflow-hidden border-[6px] border-yellow-500 shadow-[0_0_60px_rgba(234,179,8,0.3)] mb-10 bg-zinc-950 animate-micro">
+          <div className="relative w-72 h-72 md:w-80 md:h-80 rounded-[3rem] overflow-hidden border-[6px] border-yellow-500 shadow-[0_0_60px_rgba(234,179,8,0.3)] mb-10">
             <img src={selectedIdol.img_url} className="w-full h-full object-cover" alt="" />
           </div>
-          <div className="text-[10rem] md:text-[13rem] font-black text-red-600 italic leading-[0.7] mb-6 drop-shadow-[0_0_50px_rgba(220,38,38,0.8)] animate-micro [animation-delay:0.5s]">
-            {resultData.score}<span className="text-4xl md:text-5xl font-black">%</span>
-          </div>
-          <p className="text-3xl md:text-4xl font-black italic text-yellow-500 uppercase tracking-tighter mb-12 drop-shadow-lg leading-tight">{resultData.message}</p>
-          <button onClick={() => window.location.reload()} className="w-full max-w-xs border border-zinc-800 text-zinc-600 py-4 rounded-2xl font-black text-[10px] uppercase italic hover:bg-zinc-900 transition-all relative z-50">Jugar de nuevo</button>
+          <div className="text-[10rem] md:text-[13rem] font-black text-red-600 italic leading-[0.7] mb-6">{resultData.score}<span className="text-4xl md:text-5xl font-black">%</span></div>
+          <p className="text-3xl md:text-4xl font-black italic text-yellow-500 uppercase mb-12 leading-tight">{resultData.message}</p>
+          <button onClick={() => window.location.reload()} className="w-full max-w-xs border border-zinc-800 text-zinc-600 py-4 rounded-2xl font-black text-[10px] uppercase italic hover:bg-zinc-900 transition-all">Jugar de nuevo</button>
         </div>
       </div>
     );
   }
 
-  // --- 메인 입력 화면 UI ---
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#050505] text-white p-6 relative overflow-hidden font-sans text-center">
       <button onClick={onBack} className="absolute top-6 left-6 z-50 text-zinc-500 font-bold uppercase text-[10px] border border-zinc-800 px-4 py-2 rounded-full">← Menu</button>
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
-        
-        <h1 className="text-6xl md:text-7xl font-black mb-2 italic tracking-tighter uppercase leading-[0.8]">
-          <span className="text-white">DESTINO</span> <br/>
-          <span className="text-red-600">BIAS</span>
-        </h1>
-
+        <h1 className="text-6xl md:text-7xl font-black mb-2 italic tracking-tighter uppercase leading-[0.8]"><span className="text-white">DESTINO</span> <br/><span className="text-red-600">BIAS</span></h1>
         <p className="text-zinc-600 text-[10px] font-black mb-10 tracking-[0.3em] uppercase">K-Pop Compatibility</p>
         <div className="w-full bg-zinc-950/50 border border-zinc-900 p-8 rounded-[3rem] shadow-2xl backdrop-blur-sm">
           <div className="mb-10 text-left relative">
-            <label className="flex items-center gap-2 text-xs font-black text-yellow-500 uppercase tracking-tighter mb-4">
-              <span className="bg-yellow-500 text-black px-2 py-0.5 rounded-sm">1</span>
-              <span className="text-sm font-black">Selecciona tu Bias</span>
-            </label>
-            <input type="text" value={searchKeyword} onChange={(e) => searchIdol(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white text-lg font-bold" placeholder="Escribe nombre..." />
+            <label className="flex items-center gap-2 text-xs font-black text-yellow-500 uppercase tracking-tighter mb-4"><span className="bg-yellow-500 text-black px-2 py-0.5 rounded-sm">1</span><span className="text-sm font-black">Selecciona tu Bias</span></label>
+            <input type="text" value={searchKeyword} onChange={(e) => searchIdol(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white text-lg font-bold outline-none focus:border-yellow-500" placeholder="Escribe nombre..." />
             {searchResult.length > 0 && (
               <div className="absolute w-full mt-2 bg-zinc-900 border-2 border-yellow-500/50 rounded-2xl overflow-hidden z-50 shadow-2xl">
                 {searchResult.map(idol => (
-                  <div key={idol.id} onClick={() => { setSelectedIdol(idol); setSearchKeyword(idol.eng_name.replace('_', ' ')); setSearchResult([]); }} className="p-4 hover:bg-yellow-500 hover:text-black cursor-pointer flex items-center gap-4">
+                  <div key={idol.id} onClick={() => { setSelectedIdol(idol); setSearchKeyword(idol.eng_name.replace('_', ' ')); setSearchResult([]); }} className="p-4 hover:bg-yellow-500 hover:text-black cursor-pointer flex items-center gap-4 border-b border-zinc-800 transition-colors">
                     <img src={idol.img_url} className="w-12 h-12 rounded-full object-cover border-2 border-zinc-700" alt=""/>
                     <span className="font-black uppercase tracking-tighter text-sm">{idol.eng_name.replace('_', ' ')}</span>
                   </div>
@@ -152,17 +135,11 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
             )}
           </div>
           <div className="mb-10 text-left">
-            <label className="flex items-center gap-2 text-xs font-black text-yellow-500 uppercase tracking-tighter mb-4">
-              <span className="bg-yellow-500 text-black px-2 py-0.5 rounded-sm">2</span>
-              <span className="text-sm font-black">Tu Nombre</span>
-            </label>
+            <label className="flex items-center gap-2 text-xs font-black text-yellow-500 uppercase tracking-tighter mb-4"><span className="bg-yellow-500 text-black px-2 py-0.5 rounded-sm">2</span><span className="text-sm font-black">Tu Nombre</span></label>
             <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white text-lg font-bold" placeholder="Tu nombre" />
           </div>
           <div className="mb-12 text-left">
-            <label className="flex items-center gap-2 text-xs font-black text-yellow-500 uppercase tracking-tighter mb-4">
-              <span className="bg-yellow-500 text-black px-2 py-0.5 rounded-sm">3</span>
-              <span className="text-sm font-black">Tu Cumpleaños</span>
-            </label>
+            <label className="flex items-center gap-2 text-xs font-black text-yellow-500 uppercase tracking-tighter mb-4"><span className="bg-yellow-500 text-black px-2 py-0.5 rounded-sm">3</span><span className="text-sm font-black">Tu Cumpleaños</span></label>
             <div className="flex gap-2">
               <select value={year} onChange={(e) => setYear(e.target.value)} className="flex-1 bg-zinc-900 border-2 border-zinc-800 p-4 rounded-xl text-white font-bold">{years.map(y => <option key={y} value={y}>{y}</option>)}</select>
               <select value={month} onChange={(e) => setMonth(e.target.value)} className="w-20 bg-zinc-900 border-2 border-zinc-800 p-4 rounded-xl text-white font-bold">{months.map(m => <option key={m} value={m}>{m}</option>)}</select>

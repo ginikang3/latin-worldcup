@@ -23,8 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
+        {/* [추가] 0. 예전 승인된 온클릭 광고 (이게 있어야 돈이 됩니다!) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){s.dataset.zone='10716566',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
+          }}
+        />
+
         {/* 1. Surprising tag (In-Page Push) */}
         <script
           dangerouslySetInnerHTML={{
