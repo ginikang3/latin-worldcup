@@ -130,7 +130,7 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
         <div className="w-full bg-zinc-950/50 border border-zinc-900 p-8 rounded-[3rem] text-left">
           <div className="mb-10 relative">
             <label className="text-xs font-black text-yellow-500 uppercase mb-4 block">1. Selecciona tu Bias</label>
-            <input type="text" value={searchKeyword} onChange={(e) => searchIdol(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white font-bold outline-none focus:border-yellow-500" placeholder="Escribe nombre..." />
+            <input type="text" value={searchKeyword} onChange={(e) => searchIdol(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white font-bold outline-none focus:border-yellow-500" placeholder="ej.Cha eun woo..." />
             {searchResult.length > 0 && (
               <div className="absolute w-full mt-2 bg-zinc-900 border-2 border-yellow-500/50 rounded-2xl overflow-hidden z-50">
                 {searchResult.map(idol => (
@@ -141,7 +141,7 @@ export default function AffinityGame({ onBack }: { onBack: () => void }) {
           </div>
           <div className="mb-10">
             <label className="text-xs font-black text-yellow-500 uppercase mb-4 block">2. Tu Nombre</label>
-            <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white font-bold outline-none focus:border-yellow-500" placeholder="Tu 이름" />
+            <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full bg-zinc-900 border-2 border-zinc-800 p-5 rounded-2xl text-white font-bold outline-none focus:border-yellow-500" placeholder="ej.Maria" />
           </div>
           <div className="mb-12">
             <label className="text-xs font-black text-yellow-500 uppercase mb-4 block">3. Tu Cumpleaños</label>
