@@ -13,6 +13,7 @@ export default function WorldCup({ onBack }: { onBack: () => void }) {
   const [rankings, setRankings] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [clickCount, setClickCount] = useState(0); // ✅ 광고 카운터 추가
 
   useEffect(() => {
     setIsClient(true);
@@ -22,6 +23,20 @@ export default function WorldCup({ onBack }: { onBack: () => void }) {
     document.getElementsByTagName('head')[0].appendChild(meta);
     fetchRankings();
   }, []);
+
+  // ✅ 광고 1: 10번 클릭마다 터지는 비네트 광고
+  const loadVignetteAd = () => {
+    const s = document.createElement('script');
+    s.innerHTML = `(function(s){s.dataset.zone='10716622',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
+    document.body.appendChild(s);
+  };
+
+  // ✅ 광고 2: 최종 우승 시 터지는 팝업 광고
+  const loadWinnerPopUpAd = () => {
+    const s = document.createElement('script');
+    s.innerHTML = `(function(s){s.dataset.zone='10729967',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`;
+    document.body.appendChild(s);
+  };
 
   const fetchRankings = async () => {
     try {
@@ -42,6 +57,7 @@ export default function WorldCup({ onBack }: { onBack: () => void }) {
     setTotalRound(null);
     setCandidates([]);
     setMatchCount(1);
+    setClickCount(0); // 카운트 리셋
   };
 
   const copyLink = async () => {
@@ -104,6 +120,7 @@ export default function WorldCup({ onBack }: { onBack: () => void }) {
       setWinners([]);
       setMatchCount(1);
       setFinalWinner(null);
+      setClickCount(0); // 게임 시작 시 초기화
     } catch (e: any) {
       alert(`Error: ${e.message}`);
     } finally {
@@ -112,10 +129,19 @@ export default function WorldCup({ onBack }: { onBack: () => void }) {
   };
 
   const selectWinner = async (winner: any) => {
+    // ✅ 클릭 시마다 카운트 올리고 10번마다 비네트 광고
+    const nextClickCount = clickCount + 1;
+    setClickCount(nextClickCount);
+    if (nextClickCount % 10 === 0) {
+      loadVignetteAd();
+    }
+
     const nextWinners = [...winners, winner];
     const remainingCandidates = candidates.slice(2);
     if (candidates.length <= 2) {
       if (totalRound === 2) {
+        // ✅ 결승전 승리 시 팝업 광고
+        loadWinnerPopUpAd();
         setFinalWinner(winner);
         const { data } = await supabase.from('rankings').select('score').eq('kor_name', winner.kor_name).maybeSingle();
         await supabase.from('rankings').update({ score: (data?.score || 0) + 1 }).eq('kor_name', winner.kor_name);
@@ -202,13 +228,9 @@ export default function WorldCup({ onBack }: { onBack: () => void }) {
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#050505] text-white p-4 relative overflow-hidden text-center">
         <GlobalBackButton />
         <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-red-900/20 blur-[100px] rounded-full" />
-        
-        {/* --- [제목 수정 구간] --- */}
         <h1 className="text-7xl md:text-[11rem] font-black mb-12 tracking-tighter italic uppercase text-white leading-[0.8] z-10">
           BIAS <br/><span className="text-red-600">MUNDIAL</span>
         </h1>
-        {/* ---------------------- */}
-        
         <p className="text-zinc-500 font-bold mb-8 z-10 tracking-[0.15em] uppercase px-4 text-sm">¡Elige a tu favorito definitivo!</p>
         <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-16 z-10">
           {[32, 64, 128, 256].map(r => (
