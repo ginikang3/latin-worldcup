@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import React from "react";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +27,15 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        {/* ✅ 광고 스크립트가 모두 제거되었습니다. */}
+        {/* ✅ 광고 스크립트: 디자인에 영향 없음 */}
+        <Script
+          id="monetag-vignette"
+          src="https://izcle.com/vignette.min.js"
+          data-zone="10716622"
+          strategy="afterInteractive"
+        />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
