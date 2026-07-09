@@ -17,28 +17,28 @@ Built for global K-POP fans, especially Latin American users, with a Spanish-bas
 
 Choose your favorite K-POP idol through a tournament-style voting game.
 
-![World Cup](./public/screenshots/02-bias-worldcup.png)
+![World Cup](./public/screenshots/02-idol-worldcup.png)
 
 
 ### Idol Compatibility Test
 
 Users can calculate their compatibility with their favorite idol by entering their name and birthday.
 
-![Compatibility Input](./public/screenshots/03-affinity-input.png)
+![Compatibility Input](./public/screenshots/03-compatibility-input.png)
 
 
 ### Compatibility Result
 
 Generates a compatibility score and allows users to share their results.
 
-![Compatibility Result](./public/screenshots/04-affinity-result.png)
+![Compatibility Result](./public/screenshots/04-compatibility-result.png)
 
 
 ### Tarot Bias
 
 Select three tarot cards and discover your idol-based fortune reading.
 
-![Tarot Select](./public/screenshots/05-tarot-select.png)
+![Tarot Select](./public/screenshots/05-tarot-selection.png)
 
 
 ### Tarot Result
